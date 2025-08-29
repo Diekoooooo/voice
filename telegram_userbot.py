@@ -49,6 +49,7 @@ class TelegramUserbot:
         self.api_hash = os.getenv('API_HASH')
         self.phone = os.getenv('PHONE')
         self.session_name = os.getenv('SESSION_NAME', 'music_userbot')
+        self.app_password = os.getenv('APP_PASSWORD')  # کلمه عبور اپلیکیشن
         
         # ایجاد کلاینت
         self.client = TelegramClient(self.session_name, self.api_id, self.api_hash)
@@ -438,8 +439,20 @@ class TelegramUserbot:
         print("🚀 شروع Userbot موسیقی...")
         print("⚠️ هشدار: این Userbot برای استفاده آموزشی است!")
         
-        await self.client.start(phone=self.phone)
-        print("✅ Userbot متصل شد!")
+        try:
+            # تلاش برای اتصال با کلمه عبور اپلیکیشن
+            if self.app_password:
+                await self.client.start(phone=self.phone, password=self.app_password)
+                print("✅ Userbot با کلمه عبور اپلیکیشن متصل شد!")
+            else:
+                await self.client.start(phone=self.phone)
+                print("✅ Userbot متصل شد!")
+        except Exception as e:
+            print(f"❌ خطا در اتصال: {e}")
+            print("💡 اگر تایید دو مرحله‌ای فعال است، APP_PASSWORD را در فایل .env تنظیم کنید")
+            return
+        
+        print("🎵 Userbot آماده دریافت دستورات است!")
         
         # نگه داشتن Userbot فعال
         await self.client.run_until_disconnected()
