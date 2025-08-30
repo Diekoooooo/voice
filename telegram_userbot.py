@@ -468,8 +468,15 @@ class TelegramUserbot:
 
 if __name__ == "__main__":
     # بارگذاری متغیرهای محیطی از فایل .env
-    from dotenv import load_dotenv
-    load_dotenv()
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+        print("✅ فایل .env بارگذاری شد")
+    except ImportError:
+        print("❌ python-dotenv نصب نیست. نصب کنید: pip install python-dotenv")
+        exit(1)
+    except Exception as e:
+        print(f"❌ خطا در بارگذاری .env: {e}")
     
     # بررسی وجود متغیرهای محیطی
     required_env_vars = ['API_ID', 'API_HASH', 'PHONE']
@@ -478,6 +485,11 @@ if __name__ == "__main__":
     if missing_vars:
         print(f"❌ متغیرهای محیطی زیر تنظیم نشده‌اند: {', '.join(missing_vars)}")
         print("لطفاً فایل .env را بررسی کنید.")
+        print("مثال فایل .env:")
+        print("API_ID=24394707")
+        print("API_HASH=341bbfd48a38db7a40e6886be3974210")
+        print("PHONE=+989981759989")
+        print("APP_PASSWORD=9358078300Mm*")
         exit(1)
     
     userbot = TelegramUserbot()
